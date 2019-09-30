@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs')
+const cors = require('cors');
 
 const app = express();
 
@@ -25,16 +27,14 @@ const database = {
 	],
 };
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
 	res.send(database.users);
 });
 
-// res.send vs res.json
-// res.json returns a json string
 app.post('/signin', (req, res) => {
-	// res.json('signing');
 	if (
 		req.body.email === database.users[0].email &&
 		req.body.password === database.users[0].password
@@ -46,7 +46,8 @@ app.post('/signin', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-	const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
+
 	database.users.push({
 		id: '125',
 		name: name,
@@ -86,6 +87,7 @@ app.put('/image', (req, res) => {
 		res.status(400).json('Not found');
 	}
 });
+
 
 app.listen(3000, () => {
 	console.log('App is running on port 3000');
